@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Random Quote Generator</title>
+  <!-- Inter font for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Material Icons CDN -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    /* Reset and base styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #6b7280;
+      font-size: 18px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a, button {
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+    }
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      user-select: none;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 24px;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      user-select: none;
+    }
+    nav a {
+      color: #6b7280;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    nav a:hover,
+    nav a:focus-visible {
+      color: #4f46e5;
+    }
+
+    /* Main content */
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 24px 80px;
+    }
+    .quote-card {
+      background: #f9fafb;
+      max-width: 720px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .quote-text {
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: #111827;
+      line-height: 1.3;
+      position: relative;
+      padding-left: 48px;
+    }
+    .quote-text::before {
+      content: '“';
+      position: absolute;
+      left: 12px;
+      top: 8px;
+      font-size: 3.6rem;
+      color: #4f46e5;
+      font-weight: 900;
+      font-family: serif;
+      user-select: none;
+    }
+
+    .quote-author {
+      align-self: flex-end;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #6b7280;
+    }
+
+    /* Buttons container */
+    .button-group {
+      display: flex;
+      gap: 24px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: #4f46e5;
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+      user-select: none;
+    }
+    button:disabled {
+      background-color: #a5b4fc;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled),
+    button:focus-visible:not(:disabled) {
+      background-color: #4338ca;
+      box-shadow: 0 8px 20px rgba(67, 56, 202, 0.5);
+      transform: translateY(-2px);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(67, 56, 202, 0.4);
+    }
+
+    /* Material icon inside buttons */
+    .material-icons {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* Responsive typography */
+    @media (max-width: 767px) {
+      .quote-text {
+        font-size: 1.8rem;
+        padding-left: 36px;
+      }
+      .quote-text::before {
+        font-size: 2.75rem;
+        left: 8px;
+      }
+      .quote-card {
+        padding: 32px 24px;
+        gap: 24px;
+      }
+      button {
+        padding: 14px 24px;
+        font-size: 16px;
+        gap: 6px;
+      }
+      .button-group {
+        justify-content: center;
+      }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .quote-card {
+        padding: 40px 32px;
+      }
+    }
+    @media (min-width: 1440px) {
+      main {
+        padding: 80px 24px 120px;
+      }
+      .quote-card {
+        max-width: 800px;
+        padding: 64px 56px;
+      }
+    }
+
+    /* Visually hidden for accessibility */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap; /* added line */
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <header role="banner">
+    <div class="header-container">
+      <div class="logo" tabindex="0">QuoteGen</div>
+      <nav role="navigation" aria-label="Primary navigation">
+        <a href="#new-quote" tabindex="0">New Quote</a>
+        <a href="#share-quote" tabindex="0">Share Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="quote-card" role="main" aria-labelledby="quote-text quote-author">
+      <p id="quote-text" class="quote-text" aria-live="polite" aria-atomic="true" tabindex="0">
+        Loading quote...
+      </p>
+      <footer id="quote-author" class="quote-author" aria-label="Author of the quote"></footer>
+      <div class="button-group">
+        <button id="new-quote" aria-label="Generate a new random quote" type="button" title="New Quote">
+          <span class="material-icons" aria-hidden="true">autorenew</span>
+          New Quote
+        </button>
+        <button id="share-quote" aria-label="Share this quote on social media" type="button" title="Share Quote">
+          <span class="material-icons" aria-hidden="true">share</span>
+          Share
+        </button>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    (() => {
+      const quotes = [
+        { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+        { text: "Do not wait to strike till the iron is hot; but make it hot by striking.", author: "William Butler Yeats" },
+        { text: "Whether you think you can or you think you can’t, you’re right.", author: "Henry Ford" },
+        { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+        { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+        { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+        { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman" },
+        { text: "You miss 100% of the shots you don’t take.", author: "Wayne Gretzky" },
+        { text: "It always seems impossible until it’s done.", author: "Nelson Mandela" },
+        { text: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein" },
+        { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+        { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+        { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+        { text: "Dream big and dare to fail.", author: "Norman Vaughan" }
+      ];
+
+      const quoteTextEl = document.getElementById('quote-text');
+      const quoteAuthorEl = document.getElementById('quote-author');
+      const newQuoteBtn = document.getElementById('new-quote');
+      const shareQuoteBtn = document.getElementById('share-quote');
+
+      // Current quote index to avoid repeating on immediate next click
+      let currentIndex = -1;
+
+      function getRandomIndex() {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * quotes.length);
+        } while(idx === currentIndex);
+        return idx;
+      }
+
+      function displayQuote(index) {
+        const quote = quotes[index];
+        quoteTextEl.textContent = quote.text;
+        quoteAuthorEl.textContent = quote.author ? `— ${quote.author}` : '';
+        currentIndex = index;
+      }
+
+      function generateNewQuote() {
+        const idx = getRandomIndex();
+        displayQuote(idx);
+      }
+
+      function shareQuote() {
+        if (!navigator.share) {
+          // Fallback: copy to clipboard with prompt
+          const shareText = `"${quotes[currentIndex].text}" — ${quotes[currentIndex].author}`;
+          navigator.clipboard.writeText(shareText).then(() => {
+            alert('Quote copied to clipboard. Share it anywhere!');
+          }).catch(() => {
+            prompt('Copy this quote and share it:', shareText);
+          });
+          return;
+        }
+        const shareData = {
+          title: 'Inspiring Quote',
+          text: `"${quotes[currentIndex].text}" — ${quotes[currentIndex].author}`,
+        };
+        navigator.share(shareData)
+          .catch((error) => {
+            // user cancelled or error - no action needed
+            console.log('Share failed:', error);
+          });
+      }
+
+      // Initial quote on page load
+      window.addEventListener('load', () => {
+        generateNewQuote();
+      });
+
+      newQuoteBtn.addEventListener('click', () => {
+        generateNewQuote();
+        newQuoteBtn.focus();
+      });
+
+      shareQuoteBtn.addEventListener('click', () => {
+        shareQuote();
+      });
+
+      // Keyboard accessibility: space and enter to activate buttons
+      [newQuoteBtn, shareQuoteBtn].forEach(button => {
+        button.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            button.click();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+
